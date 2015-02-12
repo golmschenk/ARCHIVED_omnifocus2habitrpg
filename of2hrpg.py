@@ -20,7 +20,7 @@ class Of2Hrpg:
         Returns the list of tasks which have been completed today.
         """
         applescript = AppleScript(path="OmniFocus.scpt")
-        return applescript.run("getAllTasksCompletedToday")
+        return applescript.call("getAllTasksCompletedToday")
 
     def obtain_hrpg_dailies(self):
         """
@@ -31,6 +31,12 @@ class Of2Hrpg:
         response = urllib.request.urlopen(request)
         tasks = json.loads(response.read().decode('utf-8'))
         self.hrpg_dailies = [task for task in tasks if task["type"] == "daily"]
+
+    def complete_task(self, task):
+        request = urllib.request.Request("https://habitrpg.com/api/v2/user/tasks/%s/up" % task['id'],
+                                         data=b'',
+                                         headers={"x-api-key": habitrpg_api_token, "x-api-user": habitrpg_user_id})
+        urllib.request.urlopen(request)
 
     def create_and_complete_todo_task(self, text, priority=1):
         """
@@ -50,11 +56,15 @@ class Of2Hrpg:
 
         # Complete the task.
         task = json.loads(response.read().decode('utf-8'))
-        request = urllib.request.Request("https://habitrpg.com/api/v2/user/tasks/%s/up" % task['id'],
-                                         data=b'',
-                                         headers={"x-api-key": habitrpg_api_token, "x-api-user": habitrpg_user_id})
-        urllib.request.urlopen(request)
+        self.complete_task(task)
+
+    def process_task(self, name):
+        """
+        Handles what to do for a given task from OmniFocus
+        """
+        pass
+        #if name in self.hrpg_dailies:
 
 if __name__ == "__main__":
     of2hrpg = Of2Hrpg()
-    of2hrpg.create_and_complete_todo_task("testapiscript")
+    #of2hrpg.create_and_complete_todo_task("testapiscript")
