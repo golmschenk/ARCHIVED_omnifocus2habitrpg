@@ -58,13 +58,23 @@ class Of2Hrpg:
         task = json.loads(response.read().decode('utf-8'))
         self.complete_task(task)
 
-    def process_task(self, name):
+    def process_task(self, name, priority=1):
         """
         Handles what to do for a given task from OmniFocus
         """
-        pass
-        #if name in self.hrpg_dailies:
+        # Check if it's a daily.
+        daily = next(daily for daily in self.hrpg_dailies if daily.text == name)
+        if daily:
+            # We don't want to use it if it's already completed.
+            if not daily.completed:
+                self.complete_task(daily)
+        else:
+            # Make a regular to-do.
+            self.create_and_complete_todo_task(name, priority)
+
+
 
 if __name__ == "__main__":
     of2hrpg = Of2Hrpg()
-    #of2hrpg.create_and_complete_todo_task("testapiscript")
+    of2hrpg.obtain_hrpg_dailies()
+    of2hrpg.create_and_complete_todo_task("testapiscript")
