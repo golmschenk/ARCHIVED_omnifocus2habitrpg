@@ -49,7 +49,12 @@ class Of2Hrpg:
         response = urllib.request.urlopen(request)
 
         # Complete the task.
+        task = json.loads(response.read().decode('utf-8'))
+        request = urllib.request.Request("https://habitrpg.com/api/v2/user/tasks/%s/up" % task['id'],
+                                         data=b'',
+                                         headers={"x-api-key": habitrpg_api_token, "x-api-user": habitrpg_user_id})
+        urllib.request.urlopen(request)
 
 if __name__ == "__main__":
     of2hrpg = Of2Hrpg()
-    #of2hrpg.create_and_complete_todo_task("testapiscript")
+    of2hrpg.create_and_complete_todo_task("testapiscript")
