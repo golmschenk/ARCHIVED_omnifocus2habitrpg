@@ -15,12 +15,21 @@ class Of2Hrpg:
         self.of_tasks_completed_today = []
         self.hrpg_dailies = []
 
-    def attain_completed_omnifocus_list_for_today(self):
+    def obtain_completed_of_list_for_today(self):
         """
-        Returns the list of tasks which have been completed today.
+        Obtains the list of tasks which have been completed today.
         """
-        applescript = AppleScript(path="OmniFocus.scpt")
-        return applescript.call("getAllTasksCompletedToday")
+        #applescript = AppleScript(path="OmniFocus.scpt")
+        applescript = AppleScript("""on getAllTasksCompletedToday()
+                                         set dateToday to date (short date string of (current date))
+                                         tell application "OmniFocus"
+                                             tell front document
+                                                 set completedTasks to (name of every flattened task whose completed is true and completion date ≥ dateToday)
+                                             end tell
+                                         end tell
+                                         return completedTasks
+                                     end getAllTasksCompletedToday""")
+        self.of_tasks_completed_today = applescript.call("getAllTasksCompletedToday")
 
     def obtain_hrpg_dailies(self):
         """
@@ -75,6 +84,4 @@ class Of2Hrpg:
 
 
 if __name__ == "__main__":
-    of2hrpg = Of2Hrpg()
-    of2hrpg.obtain_hrpg_dailies()
-    of2hrpg.create_and_complete_todo_task("testapiscript")
+    pass
