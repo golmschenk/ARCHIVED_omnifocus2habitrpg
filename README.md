@@ -7,6 +7,6 @@ This is not a full syncing service. It did what I needed and may help you. It's 
 After you have installed the requirements (below), remove "template." from the secret file and add your secret tokens to the file from HabitRPG. Then just run the "of2hrpg" script.
 ## Requirements
 + Python3
-+ py-applescript *(python package)*
-+ PyObjC *(python package)*
++ py-applescript *(Python package)*
++ PyObjC *(Python package)*
 + OmniFocus **Pro** *(for Applescript support)*
