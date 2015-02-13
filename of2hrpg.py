@@ -73,10 +73,10 @@ class Of2Hrpg:
         Handles what to do for a given task from OmniFocus
         """
         # Check if it's a daily.
-        daily = next(daily for daily in self.hrpg_dailies if daily.text == name)
+        daily = next((daily for daily in self.hrpg_dailies if daily['text'] == name), None)
         if daily:
             # We don't want to use it if it's already completed.
-            if not daily.completed:
+            if not daily['completed']:
                 self.complete_task(daily)
         else:
             # Make a regular to-do.
