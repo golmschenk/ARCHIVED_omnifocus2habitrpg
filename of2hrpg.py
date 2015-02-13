@@ -6,6 +6,7 @@ import json
 from secret import habitrpg_api_token, habitrpg_user_id
 import urllib.request
 from applescript import AppleScript
+from getch import getch
 
 class Of2Hrpg:
     """
@@ -17,7 +18,7 @@ class Of2Hrpg:
 
     def obtain_completed_of_list_for_today(self):
         """
-        Obtains the list of tasks which have been completed today.
+        Obtains the list of tasks which have been completed today. "of" is for OmniFocus.
         """
         #applescript = AppleScript(path="OmniFocus.scpt")
         applescript = AppleScript("""on getAllTasksCompletedToday()
@@ -67,7 +68,7 @@ class Of2Hrpg:
         task = json.loads(response.read().decode('utf-8'))
         self.complete_task(task)
 
-    def process_task(self, name, priority=1):
+    def process_task(self, name):
         """
         Handles what to do for a given task from OmniFocus
         """
@@ -79,9 +80,35 @@ class Of2Hrpg:
                 self.complete_task(daily)
         else:
             # Make a regular to-do.
-            self.create_and_complete_todo_task(name, priority)
+            priority = self.request_priority(name)
+            if priority != -1:
+                self.create_and_complete_todo_task(name, priority)
 
+    def interface(self):
+        """
+        Presents an interface for the user to select which items to be processed.
+        """
+        self.obtain_hrpg_dailies()
+        self.obtain_completed_of_list_for_today()
+        print("For each task, select the difficulty by key (1=easy, 2=medium, 3=hard).")
+        print("To not submit the task, click any other key.")
+        for name in self.of_tasks_completed_today:
+            self.process_task(name)
 
+    def request_priority(self, name):
+        """
+        Ask the user what difficulty the task should be.
+        """
+        print(name)
+        character = getch()
+        if character == '1':
+            return 1
+        elif character == '2':
+            return 1.5
+        elif character == '3':
+            return 2
+        else:
+            return -1
 
 if __name__ == "__main__":
     pass
