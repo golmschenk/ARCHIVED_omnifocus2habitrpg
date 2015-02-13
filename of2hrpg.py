@@ -94,8 +94,10 @@ class Of2Hrpg:
         print("To not submit the task, click any other key.")
         for name in self.of_tasks_completed_today:
             self.process_task(name)
+        print("===Done===")
 
-    def request_priority(self, name):
+    @staticmethod
+    def request_priority(name):
         """
         Ask the user what difficulty the task should be.
         """
@@ -111,4 +113,5 @@ class Of2Hrpg:
             return -1
 
 if __name__ == "__main__":
-    pass
+    of2hrpg = Of2Hrpg()
+    of2hrpg.interface()
